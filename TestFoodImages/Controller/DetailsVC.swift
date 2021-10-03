@@ -8,26 +8,36 @@
 import UIKit
 
 class DetailsVC: UIViewController {
-   @IBOutlet weak var nameLabel: UILabel!
-   @IBOutlet weak var priceLabel: UILabel!
-   @IBOutlet weak var urlLabel: UILabel!
-   @IBOutlet weak var picture: UIImageView!
-   var name = ""
-   var price = ""
-   var url = ""
-   var image: UIImage?
+   @IBOutlet weak private var tableView: UITableView!
+   var collectionName = ""
+   var food = [Food]()
    
    override func viewDidLoad() {
       super.viewDidLoad()
-      picture.layer.cornerRadius = 6
-      setupUI()
+      title = collectionName
+      setupTableView()
    }
    
-   private func setupUI() {
-      title = name
-      nameLabel.text = name
-      priceLabel.text = price
-      urlLabel.text = url
-      picture.image = image
+   private func setupTableView() {
+      tableView.delegate = self
+      tableView.dataSource = self
+      tableView.register(UINib(nibName: DetailsVCTableCell.id, bundle: nil), forCellReuseIdentifier: DetailsVCTableCell.id)
+   }
+}
+
+extension DetailsVC: UITableViewDelegate, UITableViewDataSource {
+   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+      return food.count
+   }
+   
+   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+      let cell = tableView.dequeueReusableCell(withIdentifier: DetailsVCTableCell.id, for: indexPath) as! DetailsVCTableCell
+      cell.configure(food: food[indexPath.row])
+      return cell
+   }
+   
+   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+      tableView.deselectRow(at: indexPath, animated: true)
+      print(food[indexPath.row])
    }
 }

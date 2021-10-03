@@ -9,6 +9,10 @@
 /* Begin PBXBuildFile section */
 		91CCF2BDB95CC3E4D8BB390F /* Pods_TestFoodImages.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 401C9D8469367A16DCAA4EC9 /* Pods_TestFoodImages.framework */; };
 		BC65843D2707D139004DD3F3 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = BC65843C2707D139004DD3F3 /* GoogleService-Info.plist */; };
+		BCB60D542708D856006C3726 /* CollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCB60D522708D856006C3726 /* CollectionCell.swift */; };
+		BCB60D552708D856006C3726 /* CollectionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BCB60D532708D856006C3726 /* CollectionCell.xib */; };
+		BCB60D582708E524006C3726 /* DetailsVCTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCB60D562708E524006C3726 /* DetailsVCTableCell.swift */; };
+		BCB60D592708E524006C3726 /* DetailsVCTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BCB60D572708E524006C3726 /* DetailsVCTableCell.xib */; };
 		BCE206562707C7D000F2EE02 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCE206552707C7D000F2EE02 /* AppDelegate.swift */; };
 		BCE206582707C7D000F2EE02 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCE206572707C7D000F2EE02 /* SceneDelegate.swift */; };
 		BCE2065A2707C7D000F2EE02 /* HomeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCE206592707C7D000F2EE02 /* HomeVC.swift */; };
@@ -27,6 +31,10 @@
 		0CD011C8B5B73967FDC67E5E /* Pods-TestFoodImages.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TestFoodImages.debug.xcconfig"; path = "Target Support Files/Pods-TestFoodImages/Pods-TestFoodImages.debug.xcconfig"; sourceTree = "<group>"; };
 		401C9D8469367A16DCAA4EC9 /* Pods_TestFoodImages.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TestFoodImages.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BC65843C2707D139004DD3F3 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		BCB60D522708D856006C3726 /* CollectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionCell.swift; sourceTree = "<group>"; };
+		BCB60D532708D856006C3726 /* CollectionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CollectionCell.xib; sourceTree = "<group>"; };
+		BCB60D562708E524006C3726 /* DetailsVCTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsVCTableCell.swift; sourceTree = "<group>"; };
+		BCB60D572708E524006C3726 /* DetailsVCTableCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DetailsVCTableCell.xib; sourceTree = "<group>"; };
 		BCE206522707C7D000F2EE02 /* TestFoodImages.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TestFoodImages.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BCE206552707C7D000F2EE02 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BCE206572707C7D000F2EE02 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -70,7 +78,6 @@
 				0CD011C8B5B73967FDC67E5E /* Pods-TestFoodImages.debug.xcconfig */,
 				FF0AB0AB68B92B1946B35D42 /* Pods-TestFoodImages.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -125,6 +132,10 @@
 				BCE2065B2707C7D000F2EE02 /* Main.storyboard */,
 				BCE2066E2707C86B00F2EE02 /* TableCell.swift */,
 				BCE2066F2707C86B00F2EE02 /* TableCell.xib */,
+				BCB60D522708D856006C3726 /* CollectionCell.swift */,
+				BCB60D532708D856006C3726 /* CollectionCell.xib */,
+				BCB60D562708E524006C3726 /* DetailsVCTableCell.swift */,
+				BCB60D572708E524006C3726 /* DetailsVCTableCell.xib */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -200,7 +211,9 @@
 				BCE206622707C7D100F2EE02 /* LaunchScreen.storyboard in Resources */,
 				BCE2065F2707C7D100F2EE02 /* Assets.xcassets in Resources */,
 				BCE206712707C86B00F2EE02 /* TableCell.xib in Resources */,
+				BCB60D552708D856006C3726 /* CollectionCell.xib in Resources */,
 				BCE2065D2707C7D000F2EE02 /* Main.storyboard in Resources */,
+				BCB60D592708E524006C3726 /* DetailsVCTableCell.xib in Resources */,
 				BC65843D2707D139004DD3F3 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -254,8 +267,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BCB60D582708E524006C3726 /* DetailsVCTableCell.swift in Sources */,
 				BCE206702707C86B00F2EE02 /* TableCell.swift in Sources */,
 				BCE206772707CBC200F2EE02 /* DetailsVC.swift in Sources */,
+				BCB60D542708D856006C3726 /* CollectionCell.swift in Sources */,
 				BCE206732707C93D00F2EE02 /* Extensions.swift in Sources */,
 				BCE2065A2707C7D000F2EE02 /* HomeVC.swift in Sources */,
 				BCE206752707CA1600F2EE02 /* NetworkManager.swift in Sources */,

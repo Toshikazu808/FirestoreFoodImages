@@ -20,3 +20,18 @@ extension UIImageView {
       }
    }
 }
+
+extension String {
+   func separateWords() -> String {
+      var collectionName = ""
+      for i in 0..<self.count {
+         let index = self.index(self.startIndex, offsetBy: i)
+         if i > 0 && self[index].isUppercase {
+            collectionName += " \(self[index])"
+         } else {
+            collectionName += "\(self[index])"
+         }
+      }
+      return collectionName
+   }
+}

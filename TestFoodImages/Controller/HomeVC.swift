@@ -11,12 +11,15 @@ import FirebaseStorage
 
 class HomeVC: UIViewController {
    static let db = Firestore.firestore()
-   @IBOutlet weak var tableView: UITableView!
-   private var food = [Food]()
-   private var name = ""
-   private var price = ""
-   private var imgUrl = ""
-   private var picture: UIImage?
+   @IBOutlet weak private var tableView: UITableView!
+   private let docNames = [
+      "ChineseFood", "IndianFood",
+      "JapaneseFood", "ItalianFood", "Salads",
+      "BreakfastFoods", "Sandwiches", "Desserts"]
+   private var food = [[Food]]()
+   private var collectionName = ""
+   private var index = 0
+   private var detailsFood = [Food]()
    
    override func viewDidLoad() {
       super.viewDidLoad()
@@ -27,30 +30,28 @@ class HomeVC: UIViewController {
    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
       if segue.destination is DetailsVC {
          let detailsVC = segue.destination as? DetailsVC
-         detailsVC?.name = name
-         detailsVC?.price = price
-         detailsVC?.url = imgUrl
-         detailsVC?.image = picture
+         detailsVC?.collectionName = collectionName
+         detailsVC?.food = detailsFood
       }
    }
    
    private func setupTableView() {
       tableView.delegate = self
       tableView.dataSource = self
-      tableView.register(UINib(nibName: TableCell.id, bundle: nil), forCellReuseIdentifier: TableCell.id)
+      tableView.register(
+         UINib(nibName: TableCell.id, bundle: nil),
+         forCellReuseIdentifier: TableCell.id)
    }
    
    private func loadData() {
-      NetworkManager.shared.getData { [weak self] result in
+      NetworkManager.shared.getData(docNames) { [weak self] result in
          guard let self = self else { return }
          switch result {
          case .failure(let error):
             print(error)
          case .success(let success):
             self.food = success
-            DispatchQueue.main.async {
-               self.tableView.reloadData()
-            }            
+            self.tableView.reloadData()
          }
       }
    }
@@ -62,28 +63,30 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
    }
    
    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-      return TableCell.preferredHeight
+      let screenSize: CGRect = UIScreen.main.bounds
+      let cellHeight = screenSize.height * 0.55
+      return cellHeight
    }
    
    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-      let cell = tableView.dequeueReusableCell(withIdentifier: TableCell.id, for: indexPath) as! TableCell
+      let cell = tableView.dequeueReusableCell(
+         withIdentifier: TableCell.id,
+         for: indexPath) as! TableCell
       cell.delegate = self
-      cell.configure(with: food[indexPath.row], at: indexPath.row)
+      if food.count > 0 {
+         cell.configure(
+            docName: docNames[indexPath.row],
+            data: food[indexPath.row],
+            index: indexPath.row)
+      }
       return cell
-   }
-   
-   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-      tableView.deselectRow(at: indexPath, animated: true)
-      name = food[indexPath.row].name
-      price = food[indexPath.row].price
-      imgUrl = food[indexPath.row].imgUrl
-      picture = food[indexPath.row].img
-      performSegue(withIdentifier: "ToDetails", sender: nil)
    }
 }
 
 extension HomeVC: TableCellDelegate {
-   func updateUIImage(_ image: UIImage, index: Int) {
-      food[index].img = image
+   func goToDetails(docName: String, index: Int) {
+      collectionName = docName
+      detailsFood = food[index]
+      performSegue(withIdentifier: "ToDetails", sender: nil)
    }
 }

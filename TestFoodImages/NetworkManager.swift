@@ -15,6 +15,7 @@ final class NetworkManager {
    private init() {}
    static private let storage = Storage.storage().reference()
    
+   // MARK: - Basic http request
    func performRequest<T: Codable>(urlString: String, returnType: T.Type, completion: @escaping(Result<T, Error>) -> Void) {
       guard let url = URL(string: urlString) else { return }
       let session = URLSession(configuration: .default)
@@ -34,29 +35,63 @@ final class NetworkManager {
       task.resume()
    }
    
-   func getData(_ docNames: [String], completion: @escaping(Result<[[Food]], Error>) -> Void) {
+   // MARK: - Get data as dictionaries
+   func getDataAsDictionaries(_ docNames: [String], completion: @escaping(Result<[[Food]], Error>) -> Void) {
+      var foodCollection = [[Food]]()
+      var tempDict = [String: [Food]]()
+      let group = DispatchGroup()
+      for food in docNames {
+         group.enter()
+         let docRef = HomeVC.db.collection("FoodAgain").document(food)
+         docRef.getDocument { [weak self] document, error in
+            guard let self = self else { return }
+            defer { group.leave() }
+            if let error = error { completion(.failure(error)) }
+            if let document = document, document.exists {
+               let (foods: [Food], category: String) = self.initFromDictData(document.data()!)
+               tempDict[category] = foods
+            } else { print("\nDocument does not exist") }
+         }
+      }
+      group.notify(queue: .main) { [weak self] in
+         guard let self = self else { return }
+         foodCollection = self.sort(dictionary: tempDict, order: docNames)
+         self.downloadImages(foodCollection) { foodWithImages in
+            completion(.success(foodWithImages))
+         }
+      }
+   }
+   
+   private func initFromDictData(_ data: [String: Any]) -> ([Food], String) {
+      var foods = [Food]()
+      var category = ""
+      for (key, value) in data {
+         let d = value as! [String: String]
+         category = key
+         let food = Food(
+            name: d["Name"]!,
+            price: d["Price"]!,
+            category: key,
+            img: nil)
+         foods.append(food)
+      }
+      return (foods, category)
+   }
+   
+   // MARK: - Get data as arrays
+   func getDataAsArrays(_ docNames: [String], completion: @escaping(Result<[[Food]], Error>) -> Void) {
       var foodCollection = [[Food]]()
       var tempDict = [String: [Food]]()
       let group = DispatchGroup()
       for food in docNames {
          group.enter()
          let docRef = HomeVC.db.collection("Food").document(food)
-         docRef.getDocument { document, error in
+         docRef.getDocument { [weak self] document, error in
+            guard let self = self else { return }
             defer { group.leave() }
             if let error = error { completion(.failure(error)) }
             if let document = document, document.exists {
-               var foods = [Food]()
-               var category = ""
-               for (_, data) in document.data()! {
-                  let d = data as! [String]
-                  category = d[2]
-                  let food = Food(
-                     name: d[0],
-                     price: d[1],
-                     category: d[2],
-                     img: nil)
-                  foods.append(food)
-               }
+               let (foods: [Food], category: String) = self.initFromArrayData(document.data()!)
                tempDict[category] = foods
             } else { print("\nDocument does not exist") }
          }
@@ -70,6 +105,23 @@ final class NetworkManager {
       }
    }
    
+   private func initFromArrayData(_ data: [String: Any]) -> ([Food], String) {
+      var foods = [Food]()
+      var category = ""
+      for (_, value) in data {
+         let v = value as! [String]
+         category = v[2]
+         let food = Food(
+            name: v[0],
+            price: v[1],
+            category: v[2],
+            img: nil)
+         foods.append(food)
+      }
+      return (foods, category)
+   }
+   
+   // MARK: - Get images
    private func downloadImages(_ foodCollection: [[Food]], completion: @escaping([[Food]]) -> Void) {
       var foods = foodCollection
       let group = DispatchGroup()
@@ -92,6 +144,7 @@ final class NetworkManager {
       }
    }
    
+   // MARK: - Sort dictionary to return [[Food]]
    private func sort(dictionary: [String: [Food]], order: [String]) -> [[Food]] {
       var sortedFoods = [[Food]]()
       for category in order {

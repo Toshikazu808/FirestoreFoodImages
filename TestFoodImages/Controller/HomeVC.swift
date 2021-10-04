@@ -44,7 +44,7 @@ class HomeVC: UIViewController {
    }
    
    private func loadData() {
-      NetworkManager.shared.getData(docNames) { [weak self] result in
+      NetworkManager.shared.getDataAsArrays(docNames) { [weak self] result in
          guard let self = self else { return }
          switch result {
          case .failure(let error):
